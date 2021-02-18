@@ -1,4 +1,5 @@
 import './Form.css';
+import { useState } from 'react';
 import FormElement from './FormElement/FormElement';
 import Input from './Input/Input';
 import Select from './Select/Select';
@@ -7,25 +8,57 @@ import Button from './Button/Button';
 import CloseButton from './CloseButton/CloseButton';
 
 function Form() {
+  const [values, setValues] = useState({
+    name: '',
+    lastname: '',
+    email: '',
+    type: '',
+    message: '',
+    file: '',
+  });
+
+  const handleChange = ({ target: { id, value } }) => {
+    setValues((prevValues) => ({ ...prevValues, [id]: value }));
+  };
+
   return (
     <form className="form">
-      <FormElement element={Input} id="name" label="Имя" placeholder="Иван" />
       <FormElement
         element={Input}
+        onChange={handleChange}
+        value={values.name}
+        id="name"
+        label="Имя"
+        placeholder="Иван"
+      />
+      <FormElement
+        element={Input}
+        onChange={handleChange}
+        value={values.lastname}
         id="lastname"
         label="Фамилия"
         placeholder="Иванов"
       />
       <FormElement
         element={Input}
+        onChange={handleChange}
+        value={values.email}
         type="email"
         id="email"
         label="Email"
         placeholder="ivanov@gmail.com"
       />
-      <FormElement element={Select} id="type" label="Тип сообщения" />
+      <FormElement
+        element={Select}
+        onChange={handleChange}
+        value={values.type}
+        id="type"
+        label="Тип сообщения"
+      />
       <FormElement
         element={Textarea}
+        onChange={handleChange}
+        value={values.message}
         id="message"
         label="Сообщение"
         placeholder="Мое сообщение"
