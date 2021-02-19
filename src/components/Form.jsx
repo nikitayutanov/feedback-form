@@ -1,7 +1,8 @@
 import './Form.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import FormElement from './FormElement/FormElement';
-import Input from './Input/Input';
+import TextInput from './TextInput/TextInput';
+import FileInput from './FileInput/FileInput';
 import Select from './Select/Select';
 import Textarea from './Textarea/Textarea';
 import Button from './Button/Button';
@@ -14,8 +15,10 @@ function Form() {
     email: '',
     type: '',
     message: '',
-    file: '',
   });
+
+  const { name, lastname, email, type, message } = values;
+  const fileRef = useRef(null);
 
   const handleChange = ({ target: { id, value } }) => {
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
@@ -24,25 +27,25 @@ function Form() {
   return (
     <form className="form">
       <FormElement
-        element={Input}
+        element={TextInput}
         onChange={handleChange}
-        value={values.name}
+        value={name}
         id="name"
         label="Имя"
         placeholder="Иван"
       />
       <FormElement
-        element={Input}
+        element={TextInput}
         onChange={handleChange}
-        value={values.lastname}
+        value={lastname}
         id="lastname"
         label="Фамилия"
         placeholder="Иванов"
       />
       <FormElement
-        element={Input}
+        element={TextInput}
         onChange={handleChange}
-        value={values.email}
+        value={email}
         type="email"
         id="email"
         label="Email"
@@ -51,24 +54,24 @@ function Form() {
       <FormElement
         element={Select}
         onChange={handleChange}
-        value={values.type}
+        value={type}
         id="type"
         label="Тип сообщения"
       />
       <FormElement
         element={Textarea}
         onChange={handleChange}
-        value={values.message}
+        value={message}
         id="message"
         label="Сообщение"
         placeholder="Мое сообщение"
       />
       <FormElement
-        element={Input}
-        type="file"
-        className="form__attachment-button"
+        element={FileInput}
+        refProp={fileRef}
         id="file"
         label="Прикрепить изображение"
+        accept=".jpg, .jpeg, .png"
       />
       <Button type="submit" className="form__submit-button" value="Отправить" />
       <CloseButton />
