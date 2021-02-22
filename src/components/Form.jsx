@@ -1,5 +1,5 @@
 import './Form.css';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import FormElement from './FormElement/FormElement';
 import TextInput from './TextInput/TextInput';
 import FileInput from './FileInput/FileInput';
@@ -15,17 +15,72 @@ function Form() {
     email: '',
     type: '',
     message: '',
+    file: '',
   });
 
-  const { name, lastname, email, type, message } = values;
-  const fileRef = useRef(null);
+  const { name, lastname, email, type, message, file } = values;
 
   const handleChange = ({ target: { id, value } }) => {
     setValues((prevValues) => ({ ...prevValues, [id]: value }));
   };
 
+  const handleFileChange = ({ target: { id, files } }) => {
+    setValues((prevValues) => ({
+      ...prevValues,
+      [id]: files[0],
+    }));
+  };
+
+  const areFieldsValid = () => {
+    return (name || lastname) && email && type && message.length > 10;
+  };
+
+  const isAttachmentValid = () => {
+    if (file) {
+      const { type, size } = file;
+      const sizeMb = size / Math.pow(1024, 2);
+
+      const imgStr = 'image/';
+      const jpg = `${imgStr}jpeg`;
+      const png = `${imgStr}png`;
+
+      return (type === jpg || type === png) && sizeMb < 2;
+    }
+
+    return true;
+  };
+
+  const isFormValid = () => {
+    return areFieldsValid() && isAttachmentValid();
+  };
+
+  const fileToBase64 = (callback) => {
+    const reader = new FileReader();
+
+    reader.onload = ({ target: { result } }) => {
+      callback(result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  const getResult = (base64Img) => {
+    const result = { ...values, file: base64Img };
+    const jsonResult = JSON.stringify(result);
+
+    console.log(jsonResult);
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+
+    if (isFormValid()) {
+      file ? fileToBase64(getResult) : getResult();
+    }
+  };
+
   return (
-    <form className="form">
+    <form className="form" onSubmit={submitForm} noValidate>
       <FormElement
         element={TextInput}
         onChange={handleChange}
@@ -68,7 +123,7 @@ function Form() {
       />
       <FormElement
         element={FileInput}
-        refProp={fileRef}
+        onChange={handleFileChange}
         id="file"
         label="Прикрепить изображение"
         accept=".jpg, .jpeg, .png"
