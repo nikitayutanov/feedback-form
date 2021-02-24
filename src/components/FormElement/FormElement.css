@@ -7,6 +7,11 @@
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  position: relative;
+}
+
+.form__element-wrapper:last-of-type {
+  margin-bottom: 1.75rem;
 }
 
 .form__element {
@@ -17,12 +22,29 @@
   border-radius: 5px;
 }
 
+.form__element--error {
+  box-shadow: 0 0 0 1px orangered;
+}
+
+.form__element--error.form__attachment-button {
+  box-shadow: none;
+}
+
 .form__label {
   font-size: 0.85rem;
   margin-bottom: 0.2rem;
 }
 
+.form__error {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  font-size: 0.75rem;
+  color: orangered;
+}
+
 .form__attachment-button {
   padding-left: 0;
+  padding-bottom: 0;
   background-color: transparent;
 }

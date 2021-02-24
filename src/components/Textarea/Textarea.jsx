@@ -1,10 +1,10 @@
 function Textarea(props) {
-  const { id, ...attrs } = props;
+  const { className, id, ...attrs } = props;
 
   return (
     <textarea
       rows="2"
-      className="form__element form__message-field"
+      className={`${className} form__message-field`}
       id={id}
       {...attrs}
     ></textarea>

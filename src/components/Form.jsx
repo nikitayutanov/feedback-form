@@ -17,32 +17,109 @@ function Form() {
     message: '',
     file: '',
   });
+  const [errors, setErrors] = useState({
+    name: '',
+    lastname: '',
+    email: '',
+    type: '',
+    message: '',
+    file: '',
+  });
 
   const { name, lastname, email, type, message, file } = values;
 
+  const setValue = (element, value) => {
+    setValues((prevValues) => ({ ...prevValues, [element]: value }));
+  };
+
+  const setError = (element, error) => {
+    setErrors((prevErrors) => ({ ...prevErrors, [element]: error }));
+  };
+
+  const clearError = (element) => {
+    setError(element, '');
+  };
+
   const handleChange = ({ target: { id, value } }) => {
-    setValues((prevValues) => ({ ...prevValues, [id]: value }));
+    const error = errors[id];
+
+    if (error) {
+      clearError(id);
+    }
+
+    setValue(id, value);
   };
 
   const handleFileChange = ({ target: { id, files } }) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      [id]: files[0],
-    }));
+    const [file] = files;
+    const error = errors[id];
+
+    if (error) {
+      clearError(id);
+    }
+
+    setValue(id, file);
   };
 
-  const areFieldsValid = () => {
-    return (name || lastname) && email && type && message.length > 10;
+  const isEmailValid = () => {
+    const regex = /^[^\s@]+@[^\s@]+$/;
+    return regex.test(email);
   };
 
-  const isAttachmentValid = () => {
+  const validateFields = () => {
+    const required = 'Поле обязательно для заполнения';
+    const invalidEmail = 'Введите корректный email';
+    const tooShort = 'Сообщение слишком короткое';
+
+    if (!name && !lastname) {
+      setError('name', required);
+    } else {
+      clearError('name');
+    }
+
+    if (!email) {
+      setError('email', required);
+    } else if (!isEmailValid()) {
+      setError('email', invalidEmail);
+    } else {
+      clearError('email');
+    }
+
+    if (!type) {
+      setError('type', required);
+    } else {
+      clearError('type');
+    }
+
+    if (!message) {
+      setError('message', required);
+    } else if (message.length <= 10) {
+      setError('message', tooShort);
+    } else {
+      clearError('message');
+    }
+
+    return (name || lastname) && isEmailValid() && type && message.length > 10;
+  };
+
+  const validateFile = () => {
     if (file) {
       const { type, size } = file;
       const sizeMb = size / Math.pow(1024, 2);
 
+      const wrongExtension = 'Неверный формат изображения';
+      const largeSize = 'Размер файла слишком большой';
       const imgStr = 'image/';
       const jpg = `${imgStr}jpeg`;
       const png = `${imgStr}png`;
+
+      if (type !== jpg && type !== png) {
+        setError('file', wrongExtension);
+      } else if (sizeMb >= 2) {
+        setError('file', largeSize);
+      } else {
+        clearError('file');
+      }
 
       return (type === jpg || type === png) && sizeMb < 2;
     }
@@ -51,7 +128,10 @@ function Form() {
   };
 
   const isFormValid = () => {
-    return areFieldsValid() && isAttachmentValid();
+    const areFieldsValid = validateFields();
+    const isAttachmentValid = validateFile();
+
+    return areFieldsValid && isAttachmentValid;
   };
 
   const fileToBase64 = (callback) => {
@@ -85,6 +165,7 @@ function Form() {
         element={TextInput}
         onChange={handleChange}
         value={name}
+        error={errors.name}
         id="name"
         label="Имя"
         placeholder="Иван"
@@ -93,6 +174,7 @@ function Form() {
         element={TextInput}
         onChange={handleChange}
         value={lastname}
+        error={errors.lastname}
         id="lastname"
         label="Фамилия"
         placeholder="Иванов"
@@ -101,6 +183,7 @@ function Form() {
         element={TextInput}
         onChange={handleChange}
         value={email}
+        error={errors.email}
         type="email"
         id="email"
         label="Email"
@@ -110,6 +193,7 @@ function Form() {
         element={Select}
         onChange={handleChange}
         value={type}
+        error={errors.type}
         id="type"
         label="Тип сообщения"
       />
@@ -117,6 +201,7 @@ function Form() {
         element={Textarea}
         onChange={handleChange}
         value={message}
+        error={errors.message}
         id="message"
         label="Сообщение"
         placeholder="Мое сообщение"
@@ -124,6 +209,7 @@ function Form() {
       <FormElement
         element={FileInput}
         onChange={handleFileChange}
+        error={errors.file}
         id="file"
         label="Прикрепить изображение"
         accept=".jpg, .jpeg, .png"

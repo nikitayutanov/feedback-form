@@ -7,7 +7,7 @@ const options = [
 ];
 
 function Select(props) {
-  const { id, ...attrs } = props;
+  const { className, id, ...attrs } = props;
 
   const getPlaceholder = () => {
     return <option value="" hidden disabled></option>;
@@ -26,7 +26,7 @@ function Select(props) {
   };
 
   return (
-    <select className="form__element form__type-selector" id={id} {...attrs}>
+    <select className={`${className} form__type-selector`} id={id} {...attrs}>
       {getPlaceholder()}
       {getOptions()}
     </select>
