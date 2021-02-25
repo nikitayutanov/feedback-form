@@ -1,32 +1,38 @@
 import './Form.css';
 import { useState } from 'react';
 import FormElement from './FormElement/FormElement';
-import TextInput from './TextInput/TextInput';
-import FileInput from './FileInput/FileInput';
+import Input from './Input/Input';
 import Select from './Select/Select';
 import Textarea from './Textarea/Textarea';
 import Button from './Button/Button';
 import CloseButton from './CloseButton/CloseButton';
 
+const elements = ['name', 'lastname', 'email', 'type', 'message', 'file'];
+const [nameId, lastnameId, emailId, typeId, messageId, fileId] = elements;
+
 function Form() {
-  const [values, setValues] = useState({
-    name: '',
-    lastname: '',
-    email: '',
-    type: '',
-    message: '',
-    file: '',
-  });
-  const [errors, setErrors] = useState({
-    name: '',
-    lastname: '',
-    email: '',
-    type: '',
-    message: '',
-    file: '',
-  });
+  const initState = () => {
+    const state = {};
+
+    for (const el of elements) {
+      state[el] = '';
+    }
+
+    return state;
+  };
+
+  const [values, setValues] = useState(initState());
+  const [errors, setErrors] = useState(initState());
 
   const { name, lastname, email, type, message, file } = values;
+  const {
+    name: nameError,
+    lastname: lastnameError,
+    email: emailError,
+    type: typeError,
+    message: messageError,
+    file: fileError,
+  } = errors;
 
   const setValue = (element, value) => {
     setValues((prevValues) => ({ ...prevValues, [element]: value }));
@@ -37,27 +43,22 @@ function Form() {
   };
 
   const clearError = (element) => {
-    setError(element, '');
+    const error = errors[element];
+
+    if (error) {
+      setError(element, '');
+    }
   };
 
   const handleChange = ({ target: { id, value } }) => {
-    const error = errors[id];
-
-    if (error) {
-      clearError(id);
-    }
-
+    clearError(id);
     setValue(id, value);
   };
 
   const handleFileChange = ({ target: { id, files } }) => {
     const [file] = files;
-    const error = errors[id];
 
-    if (error) {
-      clearError(id);
-    }
-
+    clearError(id);
     setValue(id, file);
   };
 
@@ -72,31 +73,23 @@ function Form() {
     const tooShort = 'Сообщение слишком короткое';
 
     if (!name && !lastname) {
-      setError('name', required);
-    } else {
-      clearError('name');
+      setError(nameId, required);
     }
 
     if (!email) {
-      setError('email', required);
+      setError(emailId, required);
     } else if (!isEmailValid()) {
-      setError('email', invalidEmail);
-    } else {
-      clearError('email');
+      setError(emailId, invalidEmail);
     }
 
     if (!type) {
-      setError('type', required);
-    } else {
-      clearError('type');
+      setError(typeId, required);
     }
 
     if (!message) {
-      setError('message', required);
+      setError(messageId, required);
     } else if (message.length <= 10) {
-      setError('message', tooShort);
-    } else {
-      clearError('message');
+      setError(messageId, tooShort);
     }
 
     return (name || lastname) && isEmailValid() && type && message.length > 10;
@@ -114,11 +107,9 @@ function Form() {
       const png = `${imgStr}png`;
 
       if (type !== jpg && type !== png) {
-        setError('file', wrongExtension);
+        setError(fileId, wrongExtension);
       } else if (sizeMb >= 2) {
-        setError('file', largeSize);
-      } else {
-        clearError('file');
+        setError(fileId, largeSize);
       }
 
       return (type === jpg || type === png) && sizeMb < 2;
@@ -162,30 +153,30 @@ function Form() {
   return (
     <form className="form" onSubmit={submitForm} noValidate>
       <FormElement
-        element={TextInput}
+        element={Input}
         onChange={handleChange}
         value={name}
-        error={errors.name}
-        id="name"
+        error={nameError}
+        id={nameId}
         label="Имя"
         placeholder="Иван"
       />
       <FormElement
-        element={TextInput}
+        element={Input}
         onChange={handleChange}
         value={lastname}
-        error={errors.lastname}
-        id="lastname"
+        error={lastnameError}
+        id={lastnameId}
         label="Фамилия"
         placeholder="Иванов"
       />
       <FormElement
-        element={TextInput}
+        element={Input}
         onChange={handleChange}
         value={email}
-        error={errors.email}
+        error={emailError}
+        id={emailId}
         type="email"
-        id="email"
         label="Email"
         placeholder="ivanov@gmail.com"
       />
@@ -193,24 +184,26 @@ function Form() {
         element={Select}
         onChange={handleChange}
         value={type}
-        error={errors.type}
-        id="type"
+        error={typeError}
+        id={typeId}
         label="Тип сообщения"
       />
       <FormElement
         element={Textarea}
         onChange={handleChange}
         value={message}
-        error={errors.message}
-        id="message"
+        error={messageError}
+        id={messageId}
         label="Сообщение"
         placeholder="Мое сообщение"
       />
       <FormElement
-        element={FileInput}
+        element={Input}
         onChange={handleFileChange}
-        error={errors.file}
-        id="file"
+        error={fileError}
+        id={fileId}
+        type="file"
+        className="form__attachment-button"
         label="Прикрепить изображение"
         accept=".jpg, .jpeg, .png"
       />
