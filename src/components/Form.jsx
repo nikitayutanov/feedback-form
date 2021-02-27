@@ -51,8 +51,18 @@ function Form() {
   };
 
   const handleChange = ({ target: { id, value } }) => {
+    const trimmedValue = value.trim();
+
     clearError(id);
-    setValue(id, value);
+    setValue(id, trimmedValue);
+  };
+
+  const handleMessageChange = ({ target: { id, value } }) => {
+    const multipleSpaces = /\s\s+/g;
+    const trimmedValue = value.replace(multipleSpaces, ' ');
+
+    clearError(id);
+    setValue(id, trimmedValue);
   };
 
   const handleFileChange = ({ target: { id, files } }) => {
@@ -190,7 +200,7 @@ function Form() {
       />
       <FormElement
         element={Textarea}
-        onChange={handleChange}
+        onChange={handleMessageChange}
         value={message}
         error={messageError}
         id={messageId}
