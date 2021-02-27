@@ -10,7 +10,7 @@ import CloseButton from './CloseButton/CloseButton';
 const elements = ['name', 'lastname', 'email', 'type', 'message', 'file'];
 const [nameId, lastnameId, emailId, typeId, messageId, fileId] = elements;
 
-function Form() {
+function Form({ closeModal }) {
   const initState = () => {
     const state = {};
 
@@ -160,66 +160,78 @@ function Form() {
     }
   };
 
+  const handleOutsideClick = ({ target, currentTarget }) => {
+    if (target === currentTarget) {
+      closeModal();
+    }
+  };
+
   return (
-    <form className="form" onSubmit={submitForm} noValidate>
-      <FormElement
-        element={Input}
-        onChange={handleChange}
-        value={name}
-        error={nameError}
-        id={nameId}
-        label="Имя"
-        placeholder="Иван"
-      />
-      <FormElement
-        element={Input}
-        onChange={handleChange}
-        value={lastname}
-        error={lastnameError}
-        id={lastnameId}
-        label="Фамилия"
-        placeholder="Иванов"
-      />
-      <FormElement
-        element={Input}
-        onChange={handleChange}
-        value={email}
-        error={emailError}
-        id={emailId}
-        type="email"
-        label="Email"
-        placeholder="ivanov@gmail.com"
-      />
-      <FormElement
-        element={Select}
-        onChange={handleChange}
-        value={type}
-        error={typeError}
-        id={typeId}
-        label="Тип сообщения"
-      />
-      <FormElement
-        element={Textarea}
-        onChange={handleMessageChange}
-        value={message}
-        error={messageError}
-        id={messageId}
-        label="Сообщение"
-        placeholder="Мое сообщение"
-      />
-      <FormElement
-        element={Input}
-        onChange={handleFileChange}
-        error={fileError}
-        id={fileId}
-        type="file"
-        className="form__attachment-button"
-        label="Прикрепить изображение"
-        accept=".jpg, .jpeg, .png"
-      />
-      <Button type="submit" className="form__submit-button" value="Отправить" />
-      <CloseButton />
-    </form>
+    <div className="modal-overlay" onClick={handleOutsideClick}>
+      <form className="form" onSubmit={submitForm} noValidate>
+        <FormElement
+          element={Input}
+          onChange={handleChange}
+          value={name}
+          error={nameError}
+          id={nameId}
+          label="Имя"
+          placeholder="Иван"
+        />
+        <FormElement
+          element={Input}
+          onChange={handleChange}
+          value={lastname}
+          error={lastnameError}
+          id={lastnameId}
+          label="Фамилия"
+          placeholder="Иванов"
+        />
+        <FormElement
+          element={Input}
+          onChange={handleChange}
+          value={email}
+          error={emailError}
+          id={emailId}
+          type="email"
+          label="Email"
+          placeholder="ivanov@gmail.com"
+        />
+        <FormElement
+          element={Select}
+          onChange={handleChange}
+          value={type}
+          error={typeError}
+          id={typeId}
+          label="Тип сообщения"
+        />
+        <FormElement
+          element={Textarea}
+          onChange={handleMessageChange}
+          value={message}
+          error={messageError}
+          id={messageId}
+          label="Сообщение"
+          placeholder="Мое сообщение"
+        />
+        <FormElement
+          element={Input}
+          onChange={handleFileChange}
+          error={fileError}
+          id={fileId}
+          type="file"
+          className="form__attachment-button"
+          label="Прикрепить изображение"
+          accept=".jpg, .jpeg, .png"
+        />
+        <Button
+          type="submit"
+          className="form__submit-button"
+          value="Отправить"
+        />
+        <CloseButton onClick={closeModal} />
+      </form>
+    </div>
   );
 }
 

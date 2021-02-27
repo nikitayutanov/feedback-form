@@ -1,10 +1,10 @@
 import './Button.css';
 
 function Button(props) {
-  const { type = 'button', className = '', value } = props;
+  const { type = 'button', className = '', value, ...attrs } = props;
 
   return (
-    <button type={type} className={`button ${className}`}>
+    <button type={type} className={`button ${className}`} {...attrs}>
       {value}
     </button>
   );

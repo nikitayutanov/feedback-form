@@ -1,7 +1,11 @@
 import './CloseButton.css';
 
-function CloseButton() {
-  return <button type="button" className="close-button"></button>;
+function CloseButton(props) {
+  const { onClick } = props;
+
+  return (
+    <button type="button" className="close-button" onClick={onClick}></button>
+  );
 }
 
 export default CloseButton;
