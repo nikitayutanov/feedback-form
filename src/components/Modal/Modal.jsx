@@ -1,4 +1,5 @@
 import './Modal.css';
+import { createPortal } from 'react-dom';
 import CloseButton from '../CloseButton/CloseButton';
 
 function Modal(props) {
@@ -10,7 +11,7 @@ function Modal(props) {
     }
   };
 
-  return (
+  const component = (
     <div className="modal" onClick={handleOutsideClick}>
       <div className="modal__window">
         {children}
@@ -18,6 +19,8 @@ function Modal(props) {
       </div>
     </div>
   );
+
+  return createPortal(component, document.body);
 }
 
 export default Modal;
