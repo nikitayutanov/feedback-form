@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/feedback-form/static/css/main.702ce2f2.chunk.css",
+    "main.js": "/feedback-form/static/js/main.8dcfaea4.chunk.js",
+    "main.js.map": "/feedback-form/static/js/main.8dcfaea4.chunk.js.map",
+    "runtime-main.js": "/feedback-form/static/js/runtime-main.9da01797.js",
+    "runtime-main.js.map": "/feedback-form/static/js/runtime-main.9da01797.js.map",
+    "static/js/2.a2d606bd.chunk.js": "/feedback-form/static/js/2.a2d606bd.chunk.js",
+    "static/js/2.a2d606bd.chunk.js.map": "/feedback-form/static/js/2.a2d606bd.chunk.js.map",
+    "static/js/3.b7eb8a8f.chunk.js": "/feedback-form/static/js/3.b7eb8a8f.chunk.js",
+    "static/js/3.b7eb8a8f.chunk.js.map": "/feedback-form/static/js/3.b7eb8a8f.chunk.js.map",
+    "index.html": "/feedback-form/index.html",
+    "static/css/main.702ce2f2.chunk.css.map": "/feedback-form/static/css/main.702ce2f2.chunk.css.map",
+    "static/js/2.a2d606bd.chunk.js.LICENSE.txt": "/feedback-form/static/js/2.a2d606bd.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9da01797.js",
+    "static/js/2.a2d606bd.chunk.js",
+    "static/css/main.702ce2f2.chunk.css",
+    "static/js/main.8dcfaea4.chunk.js"
+  ]
+}
